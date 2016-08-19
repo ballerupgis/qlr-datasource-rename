@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import xml.etree.ElementTree as ET
-import fileinput
 import os
 
 #Angiv rodfolderen for qlr-filerne
