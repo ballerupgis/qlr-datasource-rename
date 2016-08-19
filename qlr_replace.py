@@ -1,24 +1,30 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import fileinput
+import xml.etree.ElementTree as ET
 import os
 
 #Angiv rodfolderen for qlr-filerne
-rootdir = 'C:\\andb\\python\\Temastyring'
-rootdir = '/home/josef/tmp/test/'
-#Angiv den gamle host
-oldhost = 'gc2'
+rootdir = '/Volumes/DISK_IMG/qlr_dims'
+
 #Angiv den nye host
 newhost = 'anders'
 
 #Looper over filer i mapper/undermapper
 for subdir, dirs, files in os.walk(rootdir):
     for f in files:
+        filepath = os.path.join(subdir, f)
         #For hver fil skrives "Editing: filename"
-        print ('Editing: ' + os.path.join(subdir, f))
-        with fileinput.FileInput(os.path.join(subdir, f), inplace=True) as qlrfile:
-            #Looper over hver linie i qlr-filerne
-            for line in qlrfile:
-                #host erstattes hvis oldhost findes i qlr-filen
-                print(line.replace("host=" + oldhost , "host=" + newhost), end='')
+        print ('Editing: ' + filepath)
+        tree = ET.parse(filepath)
+        root = tree.getroot()
+        maplayers = root.findall('maplayers')
+        for group_of_maplayers in maplayers:
+            for maplayer in group_of_maplayers:
+                splitted = maplayer.find('datasource').text.split()
+                for n,i in enumerate(splitted):
+                    if i.startswith('host'):
+                        host = 'host=' + newhost
+                        splitted[n] = host
+                maplayer.find('datasource').text = ' '.join(splitted)
+        tree.write(filepath)
