@@ -3,6 +3,7 @@
 
 import xml.etree.ElementTree as ET
 import os
+import re
 
 #Angiv rodfolderen for qlr-filerne
 rootdir = '/Volumes/DISK_IMG/qlr_dims'
@@ -18,13 +19,6 @@ for subdir, dirs, files in os.walk(rootdir):
         print ('Editing: ' + filepath)
         tree = ET.parse(filepath)
         root = tree.getroot()
-        maplayers = root.findall('maplayers')
-        for group_of_maplayers in maplayers:
-            for maplayer in group_of_maplayers:
-                splitted = maplayer.find('datasource').text.split()
-                for n,i in enumerate(splitted):
-                    if i.startswith('host'):
-                        host = 'host=' + newhost
-                        splitted[n] = host
-                maplayer.find('datasource').text = ' '.join(splitted)
+        for ds in root.findall('maplayers/maplayer/datasource'):
+            ds.text = re.sub(r'host=[^\s]*', 'host=%s' % newhost, ds.text)
         tree.write(filepath)
