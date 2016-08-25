@@ -4,12 +4,13 @@
 import xml.etree.ElementTree as ET
 import os
 import re
+import sys
 
 #Angiv rodfolderen for qlr-filerne
-ROOTDIR = '/Volumes/DISK_IMG/qlr_dims'
+ROOTDIR = sys.argv[1]
 
 #Angiv den nye host
-NEWHOST = 'anders'
+NEWHOST = sys.argv[2]
 
 #Looper over filer i mapper/undermapper
 for subdir, dirs, files in os.walk(ROOTDIR):
