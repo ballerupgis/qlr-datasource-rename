@@ -4,7 +4,7 @@
 import xml.etree.ElementTree as ET
 import os
 import re
-import sys
+import argparse
 
 
 def rename_host(ROOTDIR, NEWHOST):
@@ -21,10 +21,17 @@ def rename_host(ROOTDIR, NEWHOST):
             tree.write(filepath)
 
 if __name__ == '__main__':
+
+    #Parametre for argparse modulet
+    parser = argparse.ArgumentParser()
+    parser.add_argument("ROOTDIR", help="Specify the root directory of qlr files")
+    parser.add_argument("NEWHOST", help="Specify the new host adress")
+    args = parser.parse_args()
+
     #Angiv rodfolderen for qlr-filerne
-    ROOTDIR = sys.argv[1]
+    ROOTDIR = args.ROOTDIR
 
     #Angiv den nye host
-    NEWHOST = sys.argv[2]
+    NEWHOST = args.NEWHOST
 
     rename_host(ROOTDIR, NEWHOST)
